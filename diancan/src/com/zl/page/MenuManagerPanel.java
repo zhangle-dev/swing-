@@ -1,30 +1,51 @@
 package com.zl.page;
 
 import java.awt.Component;
+
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+
 import java.util.EventObject;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.AbstractCellEditor;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 
 import com.orderfood.pojo.Menu;
 import com.orderfood.service.MenuService;
 import com.orderfood.util.PropertiUtil;
 import com.orderfood.util.StringUtil;
-import javafx.stage.FileChooser;
 
 public class MenuManagerPanel extends JPanel {
 	private MenuService menuService;
+
 	/**
 	 * Create the panel.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	public MenuManagerPanel() throws Exception {
 		setLayout(null);
@@ -34,43 +55,58 @@ public class MenuManagerPanel extends JPanel {
 		scrollPane.setBounds(10, 43, 617, 352);
 		add(scrollPane);
 
-		menuService=new MenuService();
+		menuService = new MenuService();
 		MenuTableModel menuTableModel = new MenuTableModel(menuService.findMenus());
 		menuTableModel.addTableModelListener(new TableModelListener() {
-			
+
 			@Override
 			public void tableChanged(TableModelEvent e) {
 
 			}
 		});
-		DefaultTableColumnModel dm=new DefaultTableColumnModel();
+		DefaultTableColumnModel dm = new DefaultTableColumnModel();
 		dm.addColumn(new TableColumn(0));
 		dm.getColumn(0).setCellEditor(new MyPicEditor());
 		JTable table = new JTable(menuTableModel);
 		scrollPane.setViewportView(table);
 		table.setDefaultRenderer(String.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                if (column == 2) {
-                    JLabel jLabel = new JLabel(new ImageIcon((String) value));
-                    return jLabel;
-                }
-                return super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
-            }
-        });
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int column) {
+				if (column == 2) {
+					JLabel jLabel = new JLabel(new ImageIcon((String) value));
+					return jLabel;
+				}
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			}
+		});
 
-      table.setRowHeight(100);
+		table.setRowHeight(100);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = table.getSelectedRow();
+				int column = table.getSelectedColumn();
+
+				JFileChooser jf = new JFileChooser();  
+	            jf.showOpenDialog(MenuManagerPanel.this);		//显示打开的文件对话框  
+	            File f =  jf.getSelectedFile();	//使用文件类获取选择器选择的文件
+	            //TODO 保存图片到指定目录并在数据库中保持路径
+	            
+	            System.out.println(f.getAbsolutePath());
+			}
+		});
 
 		JButton btnNewButton = new JButton("添加菜单");
 		JButton btnRemoveButton = new JButton("删除");
-		btnRemoveButton.addActionListener((e)->{
+		btnRemoveButton.addActionListener((e) -> {
 			int row = table.getSelectedRow();
-			 if(row!=-1)  //存在选中行  
-             {  
-//				 table.remove(row);
-				 menuTableModel.remove(row);
-				 table.revalidate();
-             }
+			if (row != -1) // 存在选中行
+			{
+				// table.remove(row);
+				menuTableModel.remove(row);
+				table.revalidate();
+			}
 		});
 
 		btnNewButton.addActionListener(new ActionListener() {
@@ -89,24 +125,21 @@ public class MenuManagerPanel extends JPanel {
 
 		List<Menu> list = null;
 		String[] colunms = { "名称", "价格", "图片" };
-	
+
 		public MenuTableModel(List<Menu> list) {
 			this.list = list;
 		}
 
 		public void remove(int row) {
-			// TODO Auto-generated method stub
 			Menu menu = list.remove(row);
 			try {
 				menuService.remove(menu);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
 		public void addMenu() {
-			// TODO Auto-generated method stub
 			list.add(new Menu());
 
 		}
@@ -115,11 +148,9 @@ public class MenuManagerPanel extends JPanel {
 		public int getRowCount() {
 			return list.size();
 		}
-		
 
 		@Override
 		public int getColumnCount() {
-			// TODO Auto-generated method stub
 			return colunms.length;
 		}
 
@@ -127,52 +158,49 @@ public class MenuManagerPanel extends JPanel {
 		public String getColumnName(int column) {
 			return colunms[column];
 		}
-		
+
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			// TODO Auto-generated method stub
 			switch (columnIndex) {
 			case 0:
 				return list.get(rowIndex).getName();
 			case 1:
 				return list.get(rowIndex).getJiage();
 			case 2:
-//                ImageIcon icon=new ImageIcon(PropertiUtil.get("img_store")+"\\"+list.get(rowIndex).getImg());
-//                JLabel jLabel=new JLabel(icon);
-//                jLabel.addMouseListener(new MouseAdapter() {
-//                    @Override
-//                    public void mouseClicked(MouseEvent e) {
-//                        System.out.println("niap ");
-//                        super.mouseClicked(e);
-//                    }
-//                });
-//                return jLabel;
-                return  PropertiUtil.get("img_store")+"\\"+list.get(rowIndex).getImg();
+				// ImageIcon icon=new
+				// ImageIcon(PropertiUtil.get("img_store")+"\\"+list.get(rowIndex).getImg());
+				// JLabel jLabel=new JLabel(icon);
+				// jLabel.addMouseListener(new MouseAdapter() {
+				// @Override
+				// public void mouseClicked(MouseEvent e) {
+				// System.out.println("niap ");
+				// super.mouseClicked(e);
+				// }
+				// });
+				// return jLabel;
+				return PropertiUtil.get("img_store") + "\\" + list.get(rowIndex).getImg();
 			default:
 				break;
 			}
 			return null;
 		}
+
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			// TODO Auto-generated method stub
-//            if(columnIndex==2){
-//                return  false;
-//            }
 			return true;
 		}
+
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-			// TODO Auto-generated method stub
 			switch (columnIndex) {
 			case 0:
-				list.get(rowIndex).setName((String)aValue);
+				list.get(rowIndex).setName((String) aValue);
 				break;
 			case 1:
-				
-				if(StringUtil.isNumber(aValue.toString())){
-					list.get(rowIndex).setJiage(Float.valueOf((String)aValue));
-				}else{
+
+				if (StringUtil.isNumber(aValue.toString())) {
+					list.get(rowIndex).setJiage(Float.valueOf((String) aValue));
+				} else {
 					return;
 				}
 				break;
@@ -206,35 +234,32 @@ public class MenuManagerPanel extends JPanel {
 
                 list.get(rowIndex).setImg(uuid+".jpg");
                 break;
-		
 			default:
 				break;
 			}
 
 			try {
-				
-				int id=menuService.updateMenu(list.get(rowIndex));
+
+				int id = menuService.updateMenu(list.get(rowIndex));
 				list.get(rowIndex).setId(id);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.out.println("menu 修改了");
 			super.setValueAt(aValue, rowIndex, columnIndex);
 		}
 
-        @Override
-        public Class<?> getColumnClass(int columnIndex) {
+		@Override
+		public Class<?> getColumnClass(int columnIndex) {
 
-            return String.class;
-        }
-    }
+			return String.class;
+		}
+	}
 
 	class MyPicEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 		/*
-		 * ReadMe:当我们点击表格Cell的时候，表格检测点击的消息，
-		 * 检测Cell是否允许编辑， 如果允许编辑 则去调用 表格编辑器 来获取图片，获取完后将图片
-		 * 送达给 TableModel 结束编辑器的编辑状态，表格刷新显示 对应的图片
+		 * ReadMe:当我们点击表格Cell的时候，表格检测点击的消息， 检测Cell是否允许编辑， 如果允许编辑 则去调用 表格编辑器
+		 * 来获取图片，获取完后将图片 送达给 TableModel 结束编辑器的编辑状态，表格刷新显示 对应的图片
 		 */
 		// 用于获取图片的变量
 		private Icon m_IconPic;
@@ -252,12 +277,12 @@ public class MenuManagerPanel extends JPanel {
 			m_PicFileChooser = new JFileChooser();
 		}
 
-		// 检测鼠标的点击次数，判断编辑器是否起作用
+		// 妫�娴嬮紶鏍囩殑鐐瑰嚮娆℃暟锛屽垽鏂紪杈戝櫒鏄惁璧蜂綔鐢�
 		public boolean isCellEditable(EventObject anEvent) {
-			// 如果事件 是 鼠标的事件，大于设定的次数就true,否则false
+			// 濡傛灉浜嬩欢 鏄� 榧犳爣鐨勪簨浠讹紝澶т簬璁惧畾鐨勬鏁板氨true,鍚﹀垯false
 			if (anEvent instanceof MouseEvent) {
 
-				System.out.println("检测鼠标的点击次数，设置编辑器是否响应");
+				System.out.println("妫�娴嬮紶鏍囩殑鐐瑰嚮娆℃暟锛岃缃紪杈戝櫒鏄惁鍝嶅簲");
 				return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
 			}
 			return false;

@@ -37,7 +37,7 @@ public class TongJiPanel extends JPanel {
 		add(year);
 		
 		JButton button = new JButton("\u6309\u65E5\u671F\u67E5\u8BE2");
-		button.setBounds(279, 37, 93, 23);
+		button.setBounds(279, 37, 138, 23);
 		add(button);
 		
 		JLabel label_1 = new JLabel("\u8F93\u5165\u6708\u4EFD");
@@ -56,11 +56,11 @@ public class TongJiPanel extends JPanel {
 		add(year2);
 		
 		JButton button_1 = new JButton("\u6309\u6708\u4EFD\u67E5\u8BE2");
-		button_1.setBounds(279, 68, 93, 23);
+		button_1.setBounds(279, 68, 138, 23);
 		add(button_1);
 		
 		JTextPane textPane = new JTextPane();
-		textPane.setBounds(62, 131, 495, 209);
+		textPane.setBounds(44, 112, 544, 249);
 		add(textPane);
 		
 	}

@@ -57,6 +57,7 @@ public class UserManagerPanel extends JPanel {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				userTableModel.addUser();
+				table.revalidate();
 			}
 		});
 		btnNewButton.setBounds(534, 10, 93, 23);
@@ -67,6 +68,7 @@ public class UserManagerPanel extends JPanel {
 	private class UserTableModel extends AbstractTableModel {
 
 		List<User> list = null;
+		private String[] names = {"姓名","用户名","密码","角色，0为管理员，1为普通用户"};
 
 		public UserTableModel(List<User> list) {
 			super();
@@ -112,6 +114,11 @@ public class UserManagerPanel extends JPanel {
 			// TODO 添加用户
 			this.list.add(new User());	
 		}
+		
+		@Override
+		public String getColumnName(int column) {
+			return names[column];
+		}
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -121,7 +128,6 @@ public class UserManagerPanel extends JPanel {
 			return true;// super.isCellEditable(rowIndex, columnIndex);
 		}
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-			// TODO Auto-generated method stub
 			switch (columnIndex) {
 			case 0:
 				list.get(rowIndex).setName((String)aValue);
