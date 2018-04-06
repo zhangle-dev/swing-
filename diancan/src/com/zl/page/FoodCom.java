@@ -33,7 +33,7 @@ public class FoodCom extends JPanel {
 		n.setBounds(31, 92, 54, 15);
 		add(n);
 		
-		JLabel p = new JLabel(price+"Ԫ");
+		JLabel p = new JLabel(price+"元");
 		p.setBounds(31, 114, 54, 15);
 		add(p);
 		

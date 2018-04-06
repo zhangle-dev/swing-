@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
-//µã²Í
+//ï¿½ï¿½ï¿½
 public class DCPage extends JFrame {
 
 	private JPanel contentPane;
@@ -93,7 +93,7 @@ public class DCPage extends JFrame {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				//TODO ±£´æ½áËãºóµÄ¶©µ¥
+				//TODO ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½
 				int count = panel_2.getComponentCount();
 				float num = 0;
                 List<ItemCom> list = new ArrayList<>();
@@ -106,7 +106,7 @@ public class DCPage extends JFrame {
                 panel_2.revalidate();
 
 
-//				numÎª×Ü½ð¶î
+//				numÎªï¿½Ü½ï¿½ï¿½
                 OrderService orderService = new OrderService();
 //                OrderDetailService od=new OrderDetailService();
                 Order order = new Order();
@@ -134,7 +134,7 @@ public class DCPage extends JFrame {
 	}
 
 	private void initFood(JPanel panel_1)  {
-		//TODO Ìí¼ÓÔªËØÓ¦¸Ã´ÓÊý¾Ý¿âÖÐ²éÕÒ
+		//TODO ï¿½ï¿½ï¿½Ôªï¿½ï¿½Ó¦ï¿½Ã´ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ð²ï¿½ï¿½ï¿½
 		List<Menu> list=null;
 		try {
 			list=menuService.findMenus();
@@ -173,6 +173,6 @@ public class DCPage extends JFrame {
 			ItemCom com = (ItemCom) panel_2.getComponent(i);
 			num += com.getManay();
 		}
-		zongjine_lab.setText(num + "Ôª");
+		zongjine_lab.setText(num + "å…ƒ");
 	}
 }

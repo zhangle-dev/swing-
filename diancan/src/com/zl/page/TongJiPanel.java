@@ -32,10 +32,10 @@ public class TongJiPanel extends JPanel {
 		add(label);
 		
 		SpinnerDateModel model = new SpinnerDateModel();
-		// »ñµÃJSPinner¶ÔÏó
+		// ï¿½ï¿½ï¿½JSPinnerï¿½ï¿½ï¿½ï¿½
 		JSpinner year = new JSpinner(model);
 		year.setValue(new Date());
-		// ÉèÖÃÊ±¼ä¸ñÊ½
+		// ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ê½
 		JSpinner.DateEditor editor = new JSpinner.DateEditor(year, "yyyy-MM-dd");
 		year.setEditor(editor);
 		
@@ -50,10 +50,10 @@ public class TongJiPanel extends JPanel {
         add(label_1);
 
         SpinnerDateModel model2 = new SpinnerDateModel();
-        // »ñµÃJSPinner¶ÔÏó
+        // ï¿½ï¿½ï¿½JSPinnerï¿½ï¿½ï¿½ï¿½
         JSpinner year2 = new JSpinner(model2);
         year2.setValue(new Date());
-        // ÉèÖÃÊ±¼ä¸ñÊ½
+        // ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ê½
         JSpinner.DateEditor editor2 = new JSpinner.DateEditor(year2, "yyyy-MM");
         year2.setEditor(editor2);
 
@@ -86,11 +86,11 @@ public class TongJiPanel extends JPanel {
                 if (null != list) {
                     StringBuilder sb = new StringBuilder();
                     list.stream().forEach(t->{
-                        sb.append(String.format("%s\t X %d \t %dÔª\n", t.getName(), t.getNum(),t.getPrice()));
+                        sb.append(String.format("%s\t X %d \t %då…ƒ\n", t.getName(), t.getNum(),t.getPrice()));
                         num[0] += t.getPrice();
                     });
                     System.out.println(sb.toString());
-                    textPane.setText(sb.toString() + "\t\n" + "×Ü½ð¶î£º" + num[0]+"Ôª");
+                    textPane.setText(sb.toString() + "\t\n" + "æ€»ä»·ï¼šî£º" + num[0]+"å…ƒ");
 
 
                 }

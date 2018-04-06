@@ -34,7 +34,7 @@ public class OrderManagerPanel extends JPanel {
 		scrollPane.setBounds(10, 43, 617, 352);
 		add(scrollPane);
 		
-		//TODO ´«Èë¶©µ¥ÁĞ±í
+		//TODO ï¿½ï¿½ï¿½ë¶©ï¿½ï¿½ï¿½Ğ±ï¿½
         orderService=new OrderService();
 		List<Order> list=orderService.findOrders();
 		OrderTableModel orderTableModel = new OrderTableModel(list);
@@ -42,13 +42,13 @@ public class OrderManagerPanel extends JPanel {
 			
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				//TODO ±í¸ñÖĞÊı¾İĞŞ¸ÄÊ±±£´æµ½Êı¾İ¿â
+				//TODO ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ş¸ï¿½Ê±ï¿½ï¿½ï¿½æµ½ï¿½ï¿½ï¿½İ¿ï¿½
 			}
 		});
 		JTable table = new JTable(orderTableModel);
 		scrollPane.setViewportView(table);
 		table.setRowHeight(100);
-		JButton btnNewButton = new JButton("É¾³ı");
+		JButton btnNewButton = new JButton("åˆ é™¤");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 int n = table.getSelectedRow();
@@ -69,7 +69,7 @@ public class OrderManagerPanel extends JPanel {
 	private class OrderTableModel extends AbstractTableModel{
 
 		private List<Order> list;
-        private String[] tiles = {"×ÀºÅ", "½ğ¶î", "ÈÕÆÚ", "ÏêÇé"};
+        private String[] tiles = {"æ¡Œå·", "é‡‘é¢", "æ—¥æœŸ", "è¯¦æƒ…"};
         public OrderTableModel(List<Order> list) {
 			this.list = list;
 		}

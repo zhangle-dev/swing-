@@ -37,7 +37,7 @@ public class UserManagerPanel extends JPanel {
 		scrollPane.setBounds(10, 43, 617, 352);
 		add(scrollPane);
 
-		// ´«ÈëÓÃ»§ÁĞ±í
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ğ±ï¿½
 		userService = new UserService();
 
 		List<User> list = userService.findUsers();
@@ -46,15 +46,15 @@ public class UserManagerPanel extends JPanel {
 
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				// TODO ±í¸ñÖĞÊı¾İĞŞ¸ÄÊ±±£´æµ½Êı¾İ¿â
+				// TODO ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ş¸ï¿½Ê±ï¿½ï¿½ï¿½æµ½ï¿½ï¿½ï¿½İ¿ï¿½
 				System.out.println(e.getColumn());
 			}
 		});
 		table = new JTable(userTableModel);
 		scrollPane.setViewportView(table);
 
-		JButton btnNewButton = new JButton("\u6DFB\u52A0\u7528\u6237");
-		JButton btnRemove = new JButton("É¾³ı");
+		JButton btnNewButton = new JButton("æ·»åŠ ");
+		JButton btnRemove = new JButton("åˆ é™¤");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				userTableModel.addUser();
@@ -83,7 +83,7 @@ public class UserManagerPanel extends JPanel {
 	private class UserTableModel extends AbstractTableModel {
 
 		List<User> list = null;
-		private String[] names = {"ĞÕÃû","ÓÃ»§Ãû","ÃÜÂë","½ÇÉ«£¬0Îª¹ÜÀíÔ±£¬1ÎªÆÕÍ¨ÓÃ»§"};
+		private String[] names = {"å§“å","ç”¨æˆ·å","å¯†ç ","è§’è‰²"};
 
 		public UserTableModel(List<User> list) {
 			super();
@@ -103,7 +103,7 @@ public class UserManagerPanel extends JPanel {
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			// TODO ÔÚÕâÌí¼ÓÄãĞèÒªÔÚ±í¸ñÏÔÊ¾µÄÊı¾İ
+			// TODO ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ú±ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 			if (!list.isEmpty()) {
 				User user = list.get(rowIndex);
@@ -126,7 +126,7 @@ public class UserManagerPanel extends JPanel {
 		}
 
 		public void addUser() {
-			// TODO Ìí¼ÓÓÃ»§
+			// TODO ï¿½ï¿½ï¿½ï¿½Ã»ï¿½
 			this.list.add(new User());	
 		}
 		
@@ -137,9 +137,9 @@ public class UserManagerPanel extends JPanel {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			// Õâ¸öº¯ÊıÊ½ÉèÖÃÃ¿¸öµ¥Ôª¸ñµÄ±à¼­ÊôĞÔµÄ
-			// Õâ¸öº¯ÊıAbstractTableModelÒÑ¾­ÊµÏÖ£¬Ä¬ÈÏµÄÊÇ ²»ÔÊĞí±à¼­×´Ì¬
-			// ÕâÀïÎÒÃÇÉèÖÃÎªÔÊĞí±à¼­×´Ì¬
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Ä±à¼­ï¿½ï¿½ï¿½Ôµï¿½
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½AbstractTableModelï¿½Ñ¾ï¿½Êµï¿½Ö£ï¿½Ä¬ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à¼­×´Ì¬
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½à¼­×´Ì¬
 			return true;// super.isCellEditable(rowIndex, columnIndex);
 		}
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
@@ -164,7 +164,7 @@ public class UserManagerPanel extends JPanel {
 			default:
 				break;
 			}
-			System.out.println("ĞŞ¸ÄÊı¾İÁË");
+			System.out.println("ï¿½Ş¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 			try {
 				int id=userService.updateUser(list.get(rowIndex));
 				list.get(rowIndex).setId(id);
