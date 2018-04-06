@@ -1,83 +1,107 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.orderfood.mapper.OrderMapper" >
-  <resultMap id="BaseResultMap" type="com.orderfood.pojo.Order" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="zhuohao" property="zhuohao" jdbcType="VARCHAR" />
-    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
-    <result column="zongjiage" property="zongjiage" jdbcType="REAL" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.orderfood.mapper.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.orderfood.pojo.Order">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="zhuohao" property="zhuohao" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="zongjiage" property="zongjiage" jdbcType="REAL"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, zhuohao, create_date, zongjiage
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_order
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_order
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="findOrders" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_order
+
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_order
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.orderfood.pojo.Order" >
+    <insert id="insert" parameterType="com.orderfood.pojo.Order" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
     insert into t_order (id, zhuohao, create_date, 
       zongjiage)
     values (#{id,jdbcType=INTEGER}, #{zhuohao,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
       #{zongjiage,jdbcType=REAL})
   </insert>
-  <insert id="insertSelective" parameterType="com.orderfood.pojo.Order" >
-    insert into t_order
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="zhuohao != null" >
-        zhuohao,
-      </if>
-      <if test="createDate != null" >
-        create_date,
-      </if>
-      <if test="zongjiage != null" >
-        zongjiage,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="zhuohao != null" >
-        #{zhuohao,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null" >
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="zongjiage != null" >
-        #{zongjiage,jdbcType=REAL},
-      </if>
-    </trim>
-  </insert>
-  <select id="findOrdetailByOrderId" parameterType="java.lang.Integer" resultType="com.orderfood.pojo.OrderMenu">
+    <insert id="insertSelective" parameterType="com.orderfood.pojo.Order">
+        insert into t_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="zhuohao != null">
+                zhuohao,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="zongjiage != null">
+                zongjiage,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="zhuohao != null">
+                #{zhuohao,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="zongjiage != null">
+                #{zongjiage,jdbcType=REAL},
+            </if>
+        </trim>
+    </insert>
+    <select id="findOrdetailByOrderId" parameterType="java.lang.Integer" resultType="com.orderfood.pojo.OrderMenu">
   	select m.`name`,od.`num`,o.`create_date` from t_menu m left join t_order_detail od on m.`id`=od.`menu_id`
  left join t_order o on od.`order_id`=o.`id`
  where o.`id`=#{id}
   </select>
-  <update id="updateByPrimaryKeySelective" parameterType="com.orderfood.pojo.Order" >
-    update t_order
-    <set >
-      <if test="zhuohao != null" >
-        zhuohao = #{zhuohao,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null" >
-        create_date = #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="zongjiage != null" >
-        zongjiage = #{zongjiage,jdbcType=REAL},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.orderfood.pojo.Order" >
+    <select id="findMenuNum" parameterType="java.lang.String" resultType="com.orderfood.pojo.OrderMenu">
+    <![CDATA[
+SELECT
+  m.`name`,
+  SUM(od.`num`) as num,
+  SUM(m.`jiage`) as price
+FROM
+  t_menu m
+  LEFT JOIN t_order_detail od
+    ON m.`id` = od.`menu_id`
+  LEFT JOIN t_order o
+    ON od.`order_id` = o.`id`
+WHERE o.`create_date` <= '${date} 23:59:59'
+  AND o.`create_date` > '${date1} 00:00:00'
+GROUP BY m.`name`
+        ]]>
+  </select>
+    <update id="updateByPrimaryKeySelective" parameterType="com.orderfood.pojo.Order">
+        update t_order
+        <set>
+            <if test="zhuohao != null">
+                zhuohao = #{zhuohao,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="zongjiage != null">
+                zongjiage = #{zongjiage,jdbcType=REAL},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.orderfood.pojo.Order">
     update t_order
     set zhuohao = #{zhuohao,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},

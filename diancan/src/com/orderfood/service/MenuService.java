@@ -24,7 +24,7 @@ public class MenuService {
 		SqlSession sqlSession = SqlSessionUtil.getSqlSession();
 		MenuMapper mapper = sqlSession.getMapper(MenuMapper.class);
 		if(menu!=null){
-			mapper.deleteByPrimaryKey(menu.getId());
+            mapper.deleteByPrimaryKey(menu.getId());
             sqlSession.commit();
         }
 		sqlSession.close();
@@ -33,18 +33,20 @@ public class MenuService {
 
 	public int updateMenu(Menu menu) throws Exception {
 		SqlSession sqlSession = SqlSessionUtil.getSqlSession();
-		
 		MenuMapper mapper = sqlSession.getMapper(MenuMapper.class);
 		int id=0;
 		if(null!=menu.getId()) {
 			mapper.updateByPrimaryKey(menu);
-			id=menu.getId();
+            sqlSession.commit();
+
+            id=menu.getId();
 		}else {
-			id=mapper.insert(menu);
-		}
-		sqlSession.commit();
-		sqlSession.close();
-		return 0;
+            mapper.insert(menu);
+            id = menu.getId();
+            sqlSession.commit();
+        }
+        sqlSession.close();
+		return id;
 	}
 
 }

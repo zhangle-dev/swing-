@@ -22,13 +22,18 @@ public class ItemCom extends JPanel {
 	private JTextField n;
 	private ActionListener actionListener;
 
+	public Integer getMenuId() {
+		return menuId;
+	}
+
+	private Integer menuId;
 	/**
 	 * Create the panel.
 	 */
-	public ItemCom(String name,float price) {
+	public ItemCom(String name,float price,Integer menuId) {
 		this.name = name;
 		this.price = price;
-		
+		this.menuId = menuId;
 		setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel(name);
@@ -72,7 +77,9 @@ public class ItemCom extends JPanel {
 	public float getManay(){
 		return price * Integer.valueOf(n.getText());
 	}
-	
+	public  int getNums(){
+		return Integer.valueOf(n.getText());
+	}
 	public void setActionListeneraa(ActionListener actionListener) {
 		this.actionListener = actionListener;
 	}

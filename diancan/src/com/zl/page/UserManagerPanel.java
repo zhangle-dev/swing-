@@ -54,14 +54,29 @@ public class UserManagerPanel extends JPanel {
 		scrollPane.setViewportView(table);
 
 		JButton btnNewButton = new JButton("\u6DFB\u52A0\u7528\u6237");
+		JButton btnRemove = new JButton("É¾³ý");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				userTableModel.addUser();
 				table.revalidate();
 			}
 		});
+		btnRemove.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				if (row != -1) {
+
+					userTableModel.remove(row);
+					table.revalidate();
+				}
+			}
+		});
+		btnRemove.setBounds(425, 10, 93, 23);
 		btnNewButton.setBounds(534, 10, 93, 23);
 		add(btnNewButton);
+		add(btnRemove);
+		table.setRowHeight(100);
 
 	}
 
@@ -153,11 +168,14 @@ public class UserManagerPanel extends JPanel {
 			try {
 				int id=userService.updateUser(list.get(rowIndex));
 				list.get(rowIndex).setId(id);
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}	
 			super.setValueAt(aValue, rowIndex, columnIndex);
+		}
+
+		public void remove(int row) {
+			userService.remove(list.remove(row));
 		}
 	}
 }

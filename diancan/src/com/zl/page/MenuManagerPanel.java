@@ -87,13 +87,19 @@ public class MenuManagerPanel extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				int row = table.getSelectedRow();
 				int column = table.getSelectedColumn();
+                if (column == 2) {
 
-				JFileChooser jf = new JFileChooser();  
-	            jf.showOpenDialog(MenuManagerPanel.this);		//显示打开的文件对话框  
-	            File f =  jf.getSelectedFile();	//使用文件类获取选择器选择的文件
-	            //TODO 保存图片到指定目录并在数据库中保持路径
-	            
-	            System.out.println(f.getAbsolutePath());
+                    JFileChooser jf = new JFileChooser();
+                    jf.showOpenDialog(MenuManagerPanel.this);		//显示打开的文件对话框
+                    File f =  jf.getSelectedFile();	//使用文件类获取选择器选择的文件
+                    // 保存图片到指定目录并在数据库中保持路径
+                    if (null == f) {
+                        return;
+                    }
+                    menuTableModel.store(f, column, row);
+                    table.revalidate();
+                    System.out.println(f.getAbsolutePath());
+                }
 			}
 		});
 
@@ -167,17 +173,7 @@ public class MenuManagerPanel extends JPanel {
 			case 1:
 				return list.get(rowIndex).getJiage();
 			case 2:
-				// ImageIcon icon=new
-				// ImageIcon(PropertiUtil.get("img_store")+"\\"+list.get(rowIndex).getImg());
-				// JLabel jLabel=new JLabel(icon);
-				// jLabel.addMouseListener(new MouseAdapter() {
-				// @Override
-				// public void mouseClicked(MouseEvent e) {
-				// System.out.println("niap ");
-				// super.mouseClicked(e);
-				// }
-				// });
-				// return jLabel;
+
 				return PropertiUtil.get("img_store") + "\\" + list.get(rowIndex).getImg();
 			default:
 				break;
@@ -187,7 +183,10 @@ public class MenuManagerPanel extends JPanel {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			return true;
+            if (columnIndex == 2) {
+                return false;
+            }
+            return true;
 		}
 
 		@Override
@@ -197,49 +196,16 @@ public class MenuManagerPanel extends JPanel {
 				list.get(rowIndex).setName((String) aValue);
 				break;
 			case 1:
-
 				if (StringUtil.isNumber(aValue.toString())) {
 					list.get(rowIndex).setJiage(Float.valueOf((String) aValue));
 				} else {
 					return;
 				}
 				break;
-			case 2:
-                File file = null;
-                String imgStore = PropertiUtil.get("img_store");
-                Path path= Paths.get(imgStore);
-                String uuid=StringUtil.uuidCreate();
-                try {
-                    path= !Files.exists(path)?Files.createDirectory(path):path;
-                    File files = new File(imgStore + "\\" +uuid+ ".jpg");
-                    if (!files.exists()) {
-                        files.createNewFile();
-                    }
-                    file = new File((String) aValue);
-                    FileInputStream astream = new FileInputStream(file);
-                    FileOutputStream bstream = new FileOutputStream(files);
-                    int len;
-                    byte b[] = new byte[1024];
-                    len = astream.read(b);
-                    while (len != -1) {
-                        bstream.write(b, 0, len);
-                        len = astream.read(b);
-                    }
-                    astream.close();
-                    bstream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-                list.get(rowIndex).setImg(uuid+".jpg");
-                break;
 			default:
 				break;
 			}
-
 			try {
-
 				int id = menuService.updateMenu(list.get(rowIndex));
 				list.get(rowIndex).setId(id);
 			} catch (Exception e) {
@@ -254,7 +220,40 @@ public class MenuManagerPanel extends JPanel {
 
 			return String.class;
 		}
-	}
+
+        public void store(File f, int column, int row) {
+
+            String imgStore = PropertiUtil.get("img_store");
+            Path path= Paths.get(imgStore);
+            String uuid=StringUtil.uuidCreate();
+            try {
+                path= !Files.exists(path)?Files.createDirectory(path):path;
+                File files = new File(imgStore + "\\" +uuid+ ".jpg");
+                if (!files.exists()) {
+                    files.createNewFile();
+                }
+                FileInputStream astream = new FileInputStream(f);
+                FileOutputStream bstream = new FileOutputStream(files);
+                int len;
+                byte b[] = new byte[1024];
+                len = astream.read(b);
+                while (len != -1) {
+                    bstream.write(b, 0, len);
+                    len = astream.read(b);
+                }
+                astream.close();
+                bstream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            list.get(row).setImg(uuid+".jpg");
+            try {
+                menuService.updateMenu(list.get(row));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 	class MyPicEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 		/*

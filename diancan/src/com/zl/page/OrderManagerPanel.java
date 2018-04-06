@@ -2,6 +2,7 @@ package com.zl.page;
 
 import com.orderfood.pojo.Menu;
 import com.orderfood.pojo.Order;
+import com.orderfood.pojo.OrderMenu;
 import com.orderfood.service.MenuService;
 import com.orderfood.service.OrderService;
 
@@ -46,7 +47,7 @@ public class OrderManagerPanel extends JPanel {
 		});
 		JTable table = new JTable(orderTableModel);
 		scrollPane.setViewportView(table);
-		
+		table.setRowHeight(100);
 		JButton btnNewButton = new JButton("删除");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -68,23 +69,27 @@ public class OrderManagerPanel extends JPanel {
 	private class OrderTableModel extends AbstractTableModel{
 
 		private List<Order> list;
-
+        private String[] tiles = {"桌号", "金额", "日期", "详情"};
         public OrderTableModel(List<Order> list) {
 			this.list = list;
 		}
 
 		@Override
 		public int getRowCount() {
-			// TODO Auto-generated method stub
+
 			return list.size();
 		}
 
 
+        @Override
+        public String getColumnName(int column) {
+            return tiles[column];
+        }
 
-		@Override
+        @Override
 		public int getColumnCount() {
-			// TODO Auto-generated method stub
-			return 3;
+
+			return tiles.length;
 		}
 
 		@Override
@@ -97,7 +102,18 @@ public class OrderManagerPanel extends JPanel {
                     return list.get(rowIndex).getZongjiage();
                 case 2:
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    return  simpleDateFormat.format(list.get(rowIndex).getCreateDate());
+                    return simpleDateFormat.format(list.get(rowIndex).getCreateDate());
+                case 3:
+                    StringBuilder sb=new StringBuilder();
+                    try {
+                        List<OrderMenu> ordeDetails = orderService.findOrdeDetail(list.get(rowIndex).getId());
+                        ordeDetails.stream().forEach(t->{
+                            sb.append(String.format("%s X %d ,",t.getName(),t.getNum()));
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return  sb.toString();
                 default:
                     break;
             }

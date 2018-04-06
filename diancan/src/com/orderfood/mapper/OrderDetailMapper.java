@@ -1,6 +1,9 @@
 package com.orderfood.mapper;
 
 import com.orderfood.pojo.OrderDetail;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface OrderDetailMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,6 @@ public interface OrderDetailMapper {
     int updateByPrimaryKeySelective(OrderDetail record);
 
     int updateByPrimaryKey(OrderDetail record);
+
+    void insertBatch(@Param("orderDetails") List<OrderDetail> orderDetails);
 }

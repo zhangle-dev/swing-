@@ -79,4 +79,12 @@
       num = #{num,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert INTO  t_order_detail((id, order_id, menu_id,
+      num) VALUES
+      <foreach collection="orderDetails" item="orderdetail" separator=",">
+        (#{orderdetail.id,jdbcType=INTEGER},#{orderdetail.orderId},#{orderdetail.menuId},#{orderdetail.num})
+      </foreach>
+  </insert>
 </mapper>

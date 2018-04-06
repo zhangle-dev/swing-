@@ -1,21 +1,23 @@
 package com.zl.page;
 
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
+import com.orderfood.pojo.Menu;
+import com.orderfood.pojo.Order;
+import com.orderfood.pojo.OrderDetail;
+import com.orderfood.service.MenuService;
+import com.orderfood.service.OrderDetailService;
+import com.orderfood.service.OrderService;
+import com.orderfood.util.PropertiUtil;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
 //点餐
 public class DCPage extends JFrame {
 
@@ -23,6 +25,7 @@ public class DCPage extends JFrame {
 	private JTextField textField;
 	private JPanel panel_2;
 	private JLabel zongjine_lab;
+	private MenuService menuService;
 
 	/**
 	 * Launch the application.
@@ -44,6 +47,7 @@ public class DCPage extends JFrame {
 	 * Create the frame.
 	 */
 	public DCPage() {
+		menuService = new MenuService();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 806, 479);
 		contentPane = new JPanel();
@@ -92,17 +96,27 @@ public class DCPage extends JFrame {
 				//TODO 保存结算后的订单
 				int count = panel_2.getComponentCount();
 				float num = 0;
-				for (int i = 0; i < count; i++) {
-					ItemCom com = (ItemCom) panel_2.getComponent(i);
-					num += com.getManay();
-					
-					panel_2.remove(com);
-				}
+                List<ItemCom> list = new ArrayList<>();
+                for (int i = 0; i < count; i++) {
+                    ItemCom com = (ItemCom) panel_2.getComponent(i);
+                    num += com.getManay();
+                    list.add(com);
+                }
+                panel_2.removeAll();
+                panel_2.revalidate();
+
+
 //				num为总金额
-				
-				
-				
-			}
+                OrderService orderService = new OrderService();
+//                OrderDetailService od=new OrderDetailService();
+                Order order = new Order();
+                order.setCreateDate(new Date());
+                order.setZongjiage(num);
+                order.setZhuohao(textField.getText());
+                orderService.save(order, list);
+                textField.setText("");
+                textField.revalidate();
+            }
 		});
 		button.setBounds(34, 408, 93, 23);
 		panel.add(button);
@@ -119,30 +133,37 @@ public class DCPage extends JFrame {
 		
 	}
 
-	private void initFood(JPanel panel_1) {
+	private void initFood(JPanel panel_1)  {
 		//TODO 添加元素应该从数据库中查找
-		FoodCom food = new FoodCom("New button",100f,"C:\\Users\\张乐\\Desktop\\ic_launcher.png");
-		food.addActionListeneraa(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ItemCom item = new ItemCom(food.getFoodName(),food.getPrice());
-				item.setPreferredSize(new Dimension(150, 30));
-				item.setActionListeneraa(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						resetPrice();
-					}
-				});
-				panel_2.add(item);
-				panel_2.revalidate();
-				
-				resetPrice();
-			}
+		List<Menu> list=null;
+		try {
+			list=menuService.findMenus();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		list.stream().forEach(t->{
+            FoodCom food = new FoodCom(t.getName(),t.getJiage(), PropertiUtil.get("img_store")+"\\"+t.getImg());
+            food.addActionListeneraa(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    ItemCom item = new ItemCom(food.getFoodName(),food.getPrice(),t.getId());
+                    item.setPreferredSize(new Dimension(150, 30));
+                    item.setActionListeneraa(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            resetPrice();
+                        }
+                    });
+                    panel_2.add(item);
+                    panel_2.revalidate();
 
-		});
-		food.setPreferredSize(new Dimension(100, 150));
-		panel_1.add(food);
+                    resetPrice();
+                }
+
+            });
+            food.setPreferredSize(new Dimension(100, 150));
+            panel_1.add(food);
+        });
 }
 	
 	private void resetPrice() {
