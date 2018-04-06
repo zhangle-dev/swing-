@@ -1,21 +1,18 @@
 package com.zl.page;
 
-import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.border.LineBorder;
-import javax.swing.JTextField;
-import java.awt.CardLayout;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class AdminPage extends JFrame {
 
@@ -40,8 +37,9 @@ public class AdminPage extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws Exception 
 	 */
-	public AdminPage() {
+	public AdminPage() throws Exception {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 806, 479);
 		contentPane = new JPanel();
@@ -96,6 +94,7 @@ public class AdminPage extends JFrame {
 				scrollPane.setViewportView(menuManagerPanel);
 			}
 		});
+		
 		menuButton.setBounds(10, 32, 124, 23);
 		panel_1.add(menuButton);
 		

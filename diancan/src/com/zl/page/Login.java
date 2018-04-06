@@ -6,9 +6,11 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.orderfood.service.UserService;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
@@ -69,8 +71,16 @@ public class Login extends JFrame {
 				String username = usernameField.getText();
 				String password = new String(passwordField.getPassword());
 
-				// TODO 更根据用户名和密码判断用户状态，0表示管理员，1表示普通用户，2表示用户名或密码错误
-				int t = 0;
+				//  根据用户名和密码判断用户状态，0表示管理员，1表示普通用户，2表示用户名或密码错误
+				
+				UserService userService=new UserService();
+				int t=0;
+				try {
+					t = userService.login(username,password);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
 				switch (t) {
 				case 0:
 					
