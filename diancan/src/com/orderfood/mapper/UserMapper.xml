@@ -17,7 +17,7 @@
     from t_user
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="findUserByUsernameAndPassword" parameterType="com.orderfood.pojo.User">
+  <select id="findUserByUsernameAndPassword" parameterType="com.orderfood.pojo.User" resultMap="BaseResultMap">
 		select <include refid="Base_Column_List"/>
 		from t_user
 		where username=#{username} and password=#{password}
