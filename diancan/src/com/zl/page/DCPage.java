@@ -16,7 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
-
+//µã²Í
 public class DCPage extends JFrame {
 
 	private JPanel contentPane;
@@ -125,7 +125,7 @@ public class DCPage extends JFrame {
 		food.addActionListeneraa(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ItemCom item = new ItemCom("New button",100f);
+				ItemCom item = new ItemCom(food.getFoodName(),food.getPrice());
 				item.setPreferredSize(new Dimension(150, 30));
 				item.setActionListeneraa(new ActionListener() {
 					
@@ -143,7 +143,7 @@ public class DCPage extends JFrame {
 		});
 		food.setPreferredSize(new Dimension(100, 150));
 		panel_1.add(food);
-	}
+}
 	
 	private void resetPrice() {
 		int count = panel_2.getComponentCount();

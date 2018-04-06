@@ -1,7 +1,12 @@
 package com.zl.page;
 
+import com.orderfood.pojo.Menu;
+import com.orderfood.pojo.Order;
+import com.orderfood.service.MenuService;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -13,11 +18,11 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 public class OrderManagerPanel extends JPanel {
-
+	private MenuService menuService;
 	/**
 	 * Create the panel.
 	 */
-	public OrderManagerPanel() {
+	public OrderManagerPanel() throws Exception {
 		setLayout(null);
 		setSize(637, 405);
 		
@@ -26,7 +31,9 @@ public class OrderManagerPanel extends JPanel {
 		add(scrollPane);
 		
 		//TODO 传入菜单列表
-		OrderTableModel orderTableModel = new OrderTableModel(null);
+        menuService=new MenuService();
+		List<Menu> menus = menuService.findMenus();
+		OrderTableModel orderTableModel = new OrderTableModel(menus);
 		orderTableModel.addTableModelListener(new TableModelListener() {
 			
 			@Override
@@ -37,7 +44,7 @@ public class OrderManagerPanel extends JPanel {
 		JTable table = new JTable(orderTableModel);
 		scrollPane.setViewportView(table);
 		
-		JButton btnNewButton = new JButton("\u6DFB\u52A0\u7528\u6237");
+		JButton btnNewButton = new JButton("添加添加订单");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				orderTableModel.addOrder();
@@ -49,8 +56,10 @@ public class OrderManagerPanel extends JPanel {
 	
 	private class OrderTableModel extends AbstractTableModel{
 
-		private List list;
-		public OrderTableModel(List list) {
+		private List<Menu> list;
+        private List<Order> orderList = new ArrayList<>();
+
+        public OrderTableModel(List<Menu> list) {
 			this.list = list;
 		}
 
@@ -61,7 +70,7 @@ public class OrderManagerPanel extends JPanel {
 		}
 
 		public void addOrder() {
-			// TODO Auto-generated method stub
+			// TODO
 			
 		}
 

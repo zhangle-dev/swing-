@@ -133,7 +133,7 @@ public class UserManagerPanel extends JPanel {
 				list.get(rowIndex).setPassword((String)aValue);
 				break;
 			case 3:
-				if(StringUtil.isNumeric(aValue.toString())){	
+				if(StringUtil.isNumber(aValue.toString())){
 					
 					list.get(rowIndex).setRole(Integer.valueOf((String)aValue));
 				}else {

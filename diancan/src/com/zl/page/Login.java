@@ -65,6 +65,8 @@ public class Login extends JFrame {
 		contentPane.add(label_1);
 
 		JButton button = new JButton("\u767B\u5F55");
+
+
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -83,10 +85,10 @@ public class Login extends JFrame {
 				
 				switch (t) {
 				case 0:
-					
+					AdminPage.main(null);
 					break;
 				case 1:
-					
+					DCPage.main(null);
 					break;
 				case 2:
 					text1.setVisible(true);
@@ -94,6 +96,7 @@ public class Login extends JFrame {
 				default:
 					break;
 				}
+				Login.this.setVisible(false);
 			}
 		});
 		button.setBounds(138, 147, 93, 23);

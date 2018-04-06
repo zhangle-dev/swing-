@@ -1,31 +1,20 @@
 package com.zl.page;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.EventObject;
 import java.util.List;
 
-import javax.swing.AbstractCellEditor;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumn;
+import javax.swing.table.*;
 
 import com.orderfood.pojo.Menu;
 import com.orderfood.service.MenuService;
 import com.orderfood.util.PropertiUtil;
 import com.orderfood.util.StringUtil;
+import javafx.stage.FileChooser;
 
 public class MenuManagerPanel extends JPanel {
 	private MenuService menuService;
@@ -55,6 +44,18 @@ public class MenuManagerPanel extends JPanel {
 		dm.getColumn(0).setCellEditor(new MyPicEditor());
 		JTable table = new JTable(menuTableModel);
 		scrollPane.setViewportView(table);
+		table.setDefaultRenderer(String.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                if (column == 2) {
+                    JLabel jLabel = new JLabel(new ImageIcon((String) value));
+                    return jLabel;
+                }
+                return super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+            }
+        });
+
+      table.setRowHeight(100);
 
 		JButton btnNewButton = new JButton("添加菜单");
 		JButton btnRemoveButton = new JButton("删除");
@@ -64,11 +65,14 @@ public class MenuManagerPanel extends JPanel {
              {  
 //				 table.remove(row);
 				 menuTableModel.remove(row);
+				 table.revalidate();
              }
 		});
+
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				menuTableModel.addMenu();
+				table.revalidate();
 			}
 		});
 		btnRemoveButton.setBounds(430, 10, 93, 23);
@@ -100,6 +104,7 @@ public class MenuManagerPanel extends JPanel {
 		public void addMenu() {
 			// TODO Auto-generated method stub
 			list.add(new Menu());
+
 		}
 
 		@Override
@@ -128,9 +133,17 @@ public class MenuManagerPanel extends JPanel {
 			case 1:
 				return list.get(rowIndex).getJiage();
 			case 2:
-				Icon icon=new ImageIcon(PropertiUtil.get("img_store")+"\\"+list.get(rowIndex).getImg());
-				return icon;
-			
+//                ImageIcon icon=new ImageIcon(PropertiUtil.get("img_store")+"\\"+list.get(rowIndex).getImg());
+//                JLabel jLabel=new JLabel(icon);
+//                jLabel.addMouseListener(new MouseAdapter() {
+//                    @Override
+//                    public void mouseClicked(MouseEvent e) {
+//                        System.out.println("niap ");
+//                        super.mouseClicked(e);
+//                    }
+//                });
+//                return jLabel;
+                return  PropertiUtil.get("img_store")+"\\"+list.get(rowIndex).getImg();
 			default:
 				break;
 			}
@@ -139,6 +152,9 @@ public class MenuManagerPanel extends JPanel {
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			// TODO Auto-generated method stub
+//            if(columnIndex==2){
+//                return  false;
+//            }
 			return true;
 		}
 		@Override
@@ -157,6 +173,7 @@ public class MenuManagerPanel extends JPanel {
 				}
 				break;
 			case 2:
+
 				list.get(rowIndex).setImg((String)aValue);
 				break;
 		
@@ -176,7 +193,12 @@ public class MenuManagerPanel extends JPanel {
 			super.setValueAt(aValue, rowIndex, columnIndex);
 		}
 
-	}
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+
+            return String.class;
+        }
+    }
 
 	class MyPicEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 		/*
@@ -204,6 +226,7 @@ public class MenuManagerPanel extends JPanel {
 		public boolean isCellEditable(EventObject anEvent) {
 			// 如果事件 是 鼠标的事件，大于设定的次数就true,否则false
 			if (anEvent instanceof MouseEvent) {
+
 				System.out.println("检测鼠标的点击次数，设置编辑器是否响应");
 				return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
 			}

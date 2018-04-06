@@ -23,8 +23,10 @@ public class MenuService {
 		// TODO Auto-generated method stub
 		SqlSession sqlSession = SqlSessionUtil.getSqlSession();
 		MenuMapper mapper = sqlSession.getMapper(MenuMapper.class);
-		mapper.deleteByPrimaryKey(menu.getId());
-		sqlSession.commit();
+		if(menu!=null){
+			mapper.deleteByPrimaryKey(menu.getId());
+            sqlSession.commit();
+        }
 		sqlSession.close();
 		
 	}
