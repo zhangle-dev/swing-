@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+"mybatis.org/dtd/mybatis-3-config.dtd"><!-- 注意这儿为 config.dtd -->
+<configuration>
+	<!-- 环境配置 与spring整合,该信息由spring来管理 -->
+	<environments default="development">
+		<environment id="development">
+			<!-- 配置jdbc事物控制,由mybatis进行管理 -->
+			<transactionManager type="JDBC" />
+			<!-- 配置数据源 ,采用mybatis连接池 -->
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url"
+					value="jdbc:mysql://192.168.137.5:3306/diancan?useUnicode=true&amp;characterEncoding=utf-8" />
+				<property name="username" value="test" />
+				<property name="password" value="admin" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<!-- 加载映射文件 -->
+	<mappers>
+		<mapper resource="com/orderfood/mapper/UserMapper.xml" />
+		<mapper resource="com/orderfood/mapper/OrderMapper.xml" />
+		<mapper resource="com/orderfood/mapper/MenuMapper.xml" />
+		<mapper resource="com/orderfood/mapper/OrderDetailMapper.xml" />
+	</mappers>
+</configuration>
