@@ -30,7 +30,7 @@ public class UserService {
 		sqlSession.close();
 		if(null!=list&&list.size()>0) {
 			User user2 = list.get(0);
-			return user.getRole();
+			return user2.getRole();
 		}
 		return 2;
 	}
