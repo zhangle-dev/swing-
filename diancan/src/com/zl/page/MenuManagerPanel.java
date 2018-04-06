@@ -3,6 +3,9 @@ package com.zl.page;
 import java.awt.Component;
 
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +20,7 @@ import java.io.File;
 import java.util.EventObject;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractCellEditor;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -75,6 +79,7 @@ public class MenuManagerPanel extends JPanel {
 					boolean hasFocus, int row, int column) {
 				if (column == 2) {
 					JLabel jLabel = new JLabel(new ImageIcon((String) value));
+
 					return jLabel;
 				}
 				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -225,13 +230,30 @@ public class MenuManagerPanel extends JPanel {
 
             String imgStore = PropertiUtil.get("img_store");
             Path path= Paths.get(imgStore);
+            File files = null;
             String uuid=StringUtil.uuidCreate();
+            String desc = "";
             try {
-                path= !Files.exists(path)?Files.createDirectory(path):path;
-                File files = new File(imgStore + "\\" +uuid+ ".jpg");
+                path = !Files.exists(path) ? Files.createDirectory(path) : path;
+                desc = imgStore + "\\" + uuid + ".jpg";
+                files = new File(desc);
                 if (!files.exists()) {
                     files.createNewFile();
                 }
+                BufferedImage bufImg = ImageIO.read(f);
+                bufImg.getScaledInstance(200, 100, bufImg.SCALE_SMOOTH);
+
+                double wr = 100.0/bufImg.getWidth();
+                double hr = 100.0/bufImg.getHeight();
+                AffineTransformOp ato = new AffineTransformOp(AffineTransform.getScaleInstance(wr, hr), null);
+                BufferedImage image = ato.filter(bufImg, null);
+                ImageIO.write(image, desc.substring(desc.lastIndexOf(".") + 1), files);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            /*try {
+
                 FileInputStream astream = new FileInputStream(f);
                 FileOutputStream bstream = new FileOutputStream(files);
                 int len;
@@ -245,7 +267,7 @@ public class MenuManagerPanel extends JPanel {
                 bstream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
             list.get(row).setImg(uuid+".jpg");
             try {
                 menuService.updateMenu(list.get(row));
