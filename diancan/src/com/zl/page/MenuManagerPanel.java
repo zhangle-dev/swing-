@@ -2,6 +2,10 @@ package com.zl.page;
 
 import java.awt.Component;
 import java.awt.event.*;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.EventObject;
 import java.util.List;
 
@@ -173,9 +177,35 @@ public class MenuManagerPanel extends JPanel {
 				}
 				break;
 			case 2:
+                File file = null;
+                String imgStore = PropertiUtil.get("img_store");
+                Path path= Paths.get(imgStore);
+                String uuid=StringUtil.uuidCreate();
+                try {
+                    path= !Files.exists(path)?Files.createDirectory(path):path;
+                    File files = new File(imgStore + "\\" +uuid+ ".jpg");
+                    if (!files.exists()) {
+                        files.createNewFile();
+                    }
+                    file = new File((String) aValue);
+                    FileInputStream astream = new FileInputStream(file);
+                    FileOutputStream bstream = new FileOutputStream(files);
+                    int len;
+                    byte b[] = new byte[1024];
+                    len = astream.read(b);
+                    while (len != -1) {
+                        bstream.write(b, 0, len);
+                        len = astream.read(b);
+                    }
+                    astream.close();
+                    bstream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-				list.get(rowIndex).setImg((String)aValue);
-				break;
+
+                list.get(rowIndex).setImg(uuid+".jpg");
+                break;
 		
 			default:
 				break;

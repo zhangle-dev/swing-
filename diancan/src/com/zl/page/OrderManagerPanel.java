@@ -3,9 +3,12 @@ package com.zl.page;
 import com.orderfood.pojo.Menu;
 import com.orderfood.pojo.Order;
 import com.orderfood.service.MenuService;
+import com.orderfood.service.OrderService;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +21,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 public class OrderManagerPanel extends JPanel {
-	private MenuService menuService;
+	private OrderService orderService;
 	/**
 	 * Create the panel.
 	 */
@@ -30,10 +33,10 @@ public class OrderManagerPanel extends JPanel {
 		scrollPane.setBounds(10, 43, 617, 352);
 		add(scrollPane);
 		
-		//TODO 传入菜单列表
-        menuService=new MenuService();
-		List<Menu> menus = menuService.findMenus();
-		OrderTableModel orderTableModel = new OrderTableModel(menus);
+		//TODO 传入订单列表
+        orderService=new OrderService();
+		List<Order> list=orderService.findOrders();
+		OrderTableModel orderTableModel = new OrderTableModel(list);
 		orderTableModel.addTableModelListener(new TableModelListener() {
 			
 			@Override
@@ -44,11 +47,19 @@ public class OrderManagerPanel extends JPanel {
 		JTable table = new JTable(orderTableModel);
 		scrollPane.setViewportView(table);
 		
-		JButton btnNewButton = new JButton("添加添加订单");
+		JButton btnNewButton = new JButton("删除");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				orderTableModel.addOrder();
-			}
+                int n = table.getSelectedRow();
+                if (n != -1) {
+                    try {
+                        orderTableModel.remove(n);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                    table.revalidate();
+                }
+            }
 		});
 		btnNewButton.setBounds(534, 10, 93, 23);
 		add(btnNewButton);
@@ -56,36 +67,72 @@ public class OrderManagerPanel extends JPanel {
 	
 	private class OrderTableModel extends AbstractTableModel{
 
-		private List<Menu> list;
-        private List<Order> orderList = new ArrayList<>();
+		private List<Order> list;
 
-        public OrderTableModel(List<Menu> list) {
+        public OrderTableModel(List<Order> list) {
 			this.list = list;
 		}
 
 		@Override
 		public int getRowCount() {
 			// TODO Auto-generated method stub
-			return 0;
+			return list.size();
 		}
 
-		public void addOrder() {
-			// TODO
-			
-		}
+
 
 		@Override
 		public int getColumnCount() {
 			// TODO Auto-generated method stub
-			return 0;
+			return 3;
 		}
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			// TODO Auto-generated method stub
+            switch (columnIndex){
+                case 0:
+                   return list.get(rowIndex).getZhuohao();
+                case 1:
+                    return list.get(rowIndex).getZongjiage();
+                case 2:
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    return  simpleDateFormat.format(list.get(rowIndex).getCreateDate());
+                default:
+                    break;
+            }
 			return null;
 		}
-		
-	}
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            switch (columnIndex){
+                case 0:
+                    list.get(rowIndex).setZhuohao((String) aValue);
+                    break;
+                case 1:
+                    list.get(rowIndex).setZongjiage(Float.valueOf((String)aValue));
+                    break;
+                case 2:
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        list.get(rowIndex).setCreateDate(simpleDateFormat.parse((String) aValue));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+            }
+            try {
+                orderService.update(list.get(rowIndex));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            super.setValueAt(aValue, rowIndex, columnIndex);
+        }
+
+        public void remove(int n) throws Exception {
+
+            orderService.removeOrder(list.remove(n));
+        }
+    }
 
 }
