@@ -1,20 +1,33 @@
 package com.zl.page;
 
 import java.awt.Component;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.AbstractCellEditor;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 
 import com.orderfood.pojo.Menu;
 import com.orderfood.service.MenuService;
 import com.orderfood.util.PropertiUtil;
 import com.orderfood.util.StringUtil;
-import javafx.stage.FileChooser;
 
 public class MenuManagerPanel extends JPanel {
 	private MenuService menuService;
@@ -91,18 +104,15 @@ public class MenuManagerPanel extends JPanel {
 		}
 
 		public void remove(int row) {
-			// TODO Auto-generated method stub
 			Menu menu = list.remove(row);
 			try {
 				menuService.remove(menu);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
 		public void addMenu() {
-			// TODO Auto-generated method stub
 			list.add(new Menu());
 
 		}
@@ -115,7 +125,6 @@ public class MenuManagerPanel extends JPanel {
 
 		@Override
 		public int getColumnCount() {
-			// TODO Auto-generated method stub
 			return colunms.length;
 		}
 
@@ -126,7 +135,6 @@ public class MenuManagerPanel extends JPanel {
 		
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			// TODO Auto-generated method stub
 			switch (columnIndex) {
 			case 0:
 				return list.get(rowIndex).getName();
@@ -151,15 +159,10 @@ public class MenuManagerPanel extends JPanel {
 		}
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			// TODO Auto-generated method stub
-//            if(columnIndex==2){
-//                return  false;
-//            }
 			return true;
 		}
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-			// TODO Auto-generated method stub
 			switch (columnIndex) {
 			case 0:
 				list.get(rowIndex).setName((String)aValue);
@@ -186,7 +189,6 @@ public class MenuManagerPanel extends JPanel {
 				int id=menuService.updateMenu(list.get(rowIndex));
 				list.get(rowIndex).setId(id);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.out.println("menu 修改了");
@@ -222,12 +224,12 @@ public class MenuManagerPanel extends JPanel {
 			m_PicFileChooser = new JFileChooser();
 		}
 
-		// 检测鼠标的点击次数，判断编辑器是否起作用
+		// 妫�娴嬮紶鏍囩殑鐐瑰嚮娆℃暟锛屽垽鏂紪杈戝櫒鏄惁璧蜂綔鐢�
 		public boolean isCellEditable(EventObject anEvent) {
-			// 如果事件 是 鼠标的事件，大于设定的次数就true,否则false
+			// 濡傛灉浜嬩欢 鏄� 榧犳爣鐨勪簨浠讹紝澶т簬璁惧畾鐨勬鏁板氨true,鍚﹀垯false
 			if (anEvent instanceof MouseEvent) {
 
-				System.out.println("检测鼠标的点击次数，设置编辑器是否响应");
+				System.out.println("妫�娴嬮紶鏍囩殑鐐瑰嚮娆℃暟锛岃缃紪杈戝櫒鏄惁鍝嶅簲");
 				return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
 			}
 			return false;
