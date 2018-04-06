@@ -1,14 +1,13 @@
 package com.zl.page;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,8 +16,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
 
 public class DCPage extends JFrame {
 
@@ -98,8 +95,12 @@ public class DCPage extends JFrame {
 				for (int i = 0; i < count; i++) {
 					ItemCom com = (ItemCom) panel_2.getComponent(i);
 					num += com.getManay();
+					
+					panel_2.remove(com);
 				}
 //				numÎª×Ü½ð¶î
+				
+				
 				
 			}
 		});
